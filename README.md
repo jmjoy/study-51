@@ -24,4 +24,4 @@ sudo chmod a+rw /dev/ttyCH341USB0
 
 ## 使用
 
-在各个示例目录下运行`make`即可。
+在各个示例目录下运行`make`，或者使用`make -C <DEMO_DIR>`。
