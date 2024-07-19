@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+__sbit __at (0XEC) P4_4;
+
 //           hgfedcba
 #define N0 0b00111111
 #define N1 0b00000110
@@ -20,7 +22,9 @@ const uint8_t SMG_DUAN[10] = {N0, N1, N2, N3, N4, N5, N6, N7, N8, N9};
 
 const uint8_t SMG_WEI[4] = {0b11111110, 0b11111101, 0b11111011, 0b11110111};
 
-static uint16_t NUM = 1234;
+static uint16_t NUM = 0;
+
+static uint8_t STEP = 0;
 
 // 按教程的首位太亮了，我改成了每次只显示一位，通过定时器中断来刷新显示
 // num取值0～9999
@@ -34,10 +38,13 @@ void display(uint16_t num) {
     s = num % 100 / 10;
     g = num % 10;
 
-    P0 = SMG_WEI[wei];
+    P0 = 0xff;
     P2_7 = 1; // 打开位选锁存器
+    P0 = SMG_WEI[wei];
     P2_7 = 0; // 锁存位选数据
 
+    P0 = 0;
+    P2_6 = 1;
     switch (wei) {
     case 0:
         P0 = SMG_DUAN[q] | 0x80; // 0x80加上小数点
@@ -52,8 +59,6 @@ void display(uint16_t num) {
         P0 = SMG_DUAN[g];
         break;
     }
-
-    P2_6 = 1;
     P2_6 = 0;
 
     wei++;
@@ -66,10 +71,21 @@ void init_timer0(void) {
     ET0 = 1;
 
     TR0 = 1;
-    TMOD |= 0x10;
+    TMOD |= 0x02;
 
     TH0 = 0x00;
     TL0 = 0x00;
+}
+
+void init_timer1(void) {
+    EA = 1;
+    ET1 = 1;
+
+    TR1 = 1;
+    TMOD |= 0x20;
+
+    TH1 = 220;
+    TL1 = 220;
 }
 
 // 毫秒级延时函数定义
@@ -120,16 +136,12 @@ uint8_t xpt2046_read() {
 
 void main(void) {
     init_timer0();
+    init_timer1();
 
     while (true) {
         CS = 0;
 
-        // 7. 开始位，1一个新的字节的到来
-        // 6-4. 通道选择
-        // 3. 模式：1代表8位转换分辨率 0代表12位分辨率
-        // xpt2046_write(0b11101100);
-        xpt2046_write(0b10101100);
-        // xpt2046_write(0b10011100);
+        xpt2046_write(0b10011100);
 
         __asm__("nop");
         __asm__("nop");
@@ -148,4 +160,15 @@ void main(void) {
 
 void timer0() __interrupt 1 {
     display(NUM);
+}
+
+const uint8_t DAC_VAL = 169;
+
+void timer1() __interrupt 3 {
+    STEP += 1;
+    if (STEP <= DAC_VAL) {
+        P4_4 = 1;
+    } else {
+        P4_4 = 0;
+    }
 }

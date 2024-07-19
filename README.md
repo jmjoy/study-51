@@ -24,4 +24,4 @@ sudo chmod a+rw /dev/ttyCH341USB0
 
 ## 使用
 
-在各个示例目录下运行`make`，或者使用`make -C <DEMO_DIR>`。
+`make help`查看帮助，`make <TARGET>`编译并烧录，比如`make led`。
