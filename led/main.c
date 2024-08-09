@@ -2,7 +2,9 @@
 #include <stdint.h>
 
 #define __P1_0 0x0090
+
 // #define CLR(P) __asm__("clr %0" :: "i" (P))
+
 #define CLR(P) do { \
     __asm \
         clr __P1_0 ; 清除给定地址的值 \
@@ -21,7 +23,10 @@ void delay(uint8_t z) {
 }
 
 void main() {
-    // P1_0 = 0;
+    P1_0 = 1;
+
+    return;
+
     // P1_0 = 1;
     // P1_0 = 2;
     // P1 = 0xff;
@@ -39,23 +44,23 @@ void main() {
     __asm__("mov 0x0090, #0b11111011");
     delay(1000);
 
-    // while(1){
-    // 		//自行对照开发板引脚图。
-    //         P1_0 = 0;
-    //         P1_1 = 0;
-    //         P1_2 = 0;
-    //         P1_3 = 0;
+    while(1){
+    		//自行对照开发板引脚图。
+            P1_0 = 0;
+            P1_1 = 0;
+            P1_2 = 0;
+            P1_3 = 0;
 
-    //         Delay(500);
+            delay(500);
 
-    //         P1_0 = 1;
-    //         P1_1 = 1;
-    //         P1_2 = 1;
-    //         P1_3 = 1;
+            P1_0 = 1;
+            P1_1 = 1;
+            P1_2 = 1;
+            P1_3 = 1;
 
-    //         //led灯以一秒为一个周期闪烁。
-    //         Delay(500);
-    // }
+            //led灯以一秒为一个周期闪烁。
+            delay(500);
+    }
 }
 
 // void Delay(unsigned int ms){

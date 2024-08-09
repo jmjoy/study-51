@@ -1,7 +1,14 @@
 #include <mcs51/8051.h>
 #include <stdint.h>
 
+/**
+ * 数码管位选
+ */
 #define WELA P2_7
+
+/**
+ * 数码管段选
+ */
 #define DULA P2_6
 
 #define crol(x, n) (((x) << (n)) | ((x) >> (8 * sizeof(x) - (n))))
@@ -28,10 +35,10 @@ const uint8_t WES[8] = {0b11111110, 0b11111101, 0b11111011, 0b11110111,
 const uint8_t NS[10] = {N0, N1, N2, N3, N4, N5, N6, N7, N8, N9};
 
 void main(void) {
-    P1 = 0;
-
+    // P1 = 0;
     while (1) {
         for (int i = 0; i < 8; i += 1) {
+            P0 = 0xff;
             WELA = 1;
             // P0 = crol(0b11111110, i);
             P0 = WES[i];
@@ -40,6 +47,8 @@ void main(void) {
             DULA = 1;
             P0 = NS[i + 1];
             DULA = 0;
+
+            P0 = 0xff;
 
             delay();
         }
