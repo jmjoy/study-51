@@ -17,6 +17,7 @@ void main(void) {
     while (1) {
         P2_3 = !P2_3;
         delay();
+        delay();
 
         // P1 = tmp;
         // tmp = crol(tmp, 1);
