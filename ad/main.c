@@ -142,6 +142,7 @@ void main(void) {
 
         CS = 1;
 
+
         delay(500);
     }
 }
