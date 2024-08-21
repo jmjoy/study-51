@@ -22,7 +22,7 @@ $(foreach target,$(BUILD_TARGETS),$(eval $(target): $(target)-build $(target)-fl
 $(foreach target,$(BUILD_TARGETS),$(eval $(target)-build: _build/$(target).hex;))
 
 _build/%.hex: %/main.c
-	$(SDCC) $*/main.c -o _build/$*.hex --std-c11
+	$(SDCC) $*/main.c -o _build/$*.hex --std=c11
 
 %-flash:
 	$(STCGAL) -P auto -p $(TTY) -a _build/$*.hex

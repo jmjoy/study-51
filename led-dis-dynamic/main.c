@@ -13,10 +13,28 @@
 
 #define crol(x, n) (((x) << (n)) | ((x) >> (8 * sizeof(x) - (n))))
 
-void delay(void) {
-    for (uint16_t i = 0; i < 65; i += 1) {
-    }
+void Delay1ms() //@11.0592MHz
+{
+    unsigned char i, j;
+
+    // _nop_();
+    i = 2;
+    j = 199;
+    do {
+        while (--j)
+            ;
+    } while (--i);
 }
+
+void Delay100us()		//@11.0592MHz
+{
+	unsigned char i;
+
+	// _nop_();
+	i = 43;
+	while (--i);
+}
+
 
 //           hgfedcba
 #define N0 0b00111111
@@ -36,6 +54,9 @@ const uint8_t NS[10] = {N0, N1, N2, N3, N4, N5, N6, N7, N8, N9};
 
 void main(void) {
     // P1 = 0;
+
+    // 看了一遍江协科技的51单片机视频，了解了数码管的消隐的知识，
+    // 写出来完美的动态数码管扫描代码！
     while (1) {
         for (int i = 0; i < 8; i += 1) {
             P0 = 0xff;
@@ -44,13 +65,12 @@ void main(void) {
             P0 = WES[i];
             WELA = 0;
 
+            P0 = 0x00;
             DULA = 1;
             P0 = NS[i + 1];
+            Delay100us();
+            P0 = 0x00;
             DULA = 0;
-
-            P0 = 0xff;
-
-            delay();
         }
     }
 }
