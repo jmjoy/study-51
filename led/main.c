@@ -6,13 +6,11 @@
 // #define CLR(P) __asm__("clr %0" :: "i" (P))
 
 #define CLR(P) do { \
-    __asm \
-        clr __P1_0 ; 清除给定地址的值 \
-    __endasm; \
+__asm \
+clr __P1_0 ; 清除给定地址的值 \
+__endasm; \
 } while(0)
 
-
-// void Delay(unsigned int ms);
 
 // 毫秒级延时函数定义
 void delay(uint8_t z) {
@@ -23,10 +21,6 @@ void delay(uint8_t z) {
 }
 
 void main() {
-    P1_0 = 1;
-
-    return;
-
     // P1_0 = 1;
     // P1_0 = 2;
     // P1 = 0xff;
@@ -46,26 +40,13 @@ void main() {
 
     while(1){
     		//自行对照开发板引脚图。
-            P1_0 = 0;
-            P1_1 = 0;
-            P1_2 = 0;
-            P1_3 = 0;
+            P1 = 0;
 
-            delay(500);
+            delay(5000);
 
-            P1_0 = 1;
-            P1_1 = 1;
-            P1_2 = 1;
-            P1_3 = 1;
+            P1 = 1;
 
             //led灯以一秒为一个周期闪烁。
-            delay(500);
+            delay(5000);
     }
 }
-
-// void Delay(unsigned int ms){
-//         unsigned int a, b;
-//         for(a = ms; a > 0; a--){
-//                 for(b = 100; b > 0; b--);
-//         }
-// }
